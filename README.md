@@ -1,147 +1,63 @@
 # Customer Churn Prediction
 
-## 📌 Project Overview
+This project predicts whether a telecom customer is likely to churn or stay. It includes a leakage-safe training and evaluation workflow, model tuning, and an interactive Streamlit app.
 
-This project uses Machine Learning to predict whether a customer is likely to **churn (leave)** or **stay** with a company.
+## Dataset and workflow
 
-The project includes data preprocessing, model training, model comparison, and evaluation using multiple performance metrics.
+The training data is `Telco_customer_churn.xlsx`. Customer identifiers, churn labels/scores/reasons, and other non-predictive location fields are excluded from the model features.
 
-## 🎯 Objective
+The raw feature data is split into training and test sets with `stratify=y` before any preprocessing is fitted. A scikit-learn `ColumnTransformer` imputes and scales numeric features and imputes and one-hot encodes nominal categories inside each model pipeline. Logistic Regression is a baseline; Random Forest and XGBoost use five-fold stratified cross-validation for model selection and hyperparameter tuning.
 
-The main objective of this project is to build a machine learning model that can identify customers who are likely to leave a service.
+The selected model is evaluated against the held-out test set using accuracy, precision, recall, F1-score, ROC-AUC, and a confusion matrix.
 
-This can help businesses identify high-risk customers and take actions to improve customer retention.
+## Setup (PowerShell)
 
-## 📊 Dataset
-
-The project uses a Telecom Customer Churn dataset containing customer information such as:
-
-- Customer demographics
-- Services used
-- Contract information
-- Payment method
-- Monthly charges
-- Total charges
-- Customer churn information
-
-## ⚙️ Machine Learning Workflow
-
-```text
-Dataset
-   ↓
-Data Cleaning
-   ↓
-Data Preprocessing
-   ↓
-Train/Test Split
-   ↓
-Model Training
-   ↓
-Model Evaluation
-   ↓
-Model Comparison
-   ↓
-Best Model Selection
+```powershell
+git clone https://github.com/Zeeshanhaider-30/customer-churn-prediction.git
+cd customer-churn-prediction
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
 
-## 🤖 Models Used
+## Train and evaluate
 
-The following Machine Learning algorithms are used and compared:
+```powershell
+python train.py
+```
 
-1. Logistic Regression
-2. Random Forest
-3. XGBoost
+The script reports cross-validation results and held-out test metrics, then saves the complete preprocessing/model pipeline to `best_model.joblib`. The Jupyter notebook provides the same workflow:
 
-## 📈 Evaluation Metrics
+```powershell
+jupyter notebook churn_prediction.ipynb
+```
 
-The models are evaluated using:
+## Run the app
 
-- Accuracy
-- Precision
-- Recall
-- F1-Score
+```powershell
+streamlit run app.py
+```
 
-## 🔍 Logistic Regression
+The app reports the predicted Churn/Stay class, churn probability, and confidence in the predicted class. Run the training script first if the exported model is missing.
 
-Logistic Regression is used as a baseline classification model for predicting whether a customer will churn or stay.
-
-## 🌲 Random Forest
-
-Random Forest is an ensemble Machine Learning algorithm that combines multiple decision trees to make predictions.
-
-## 🚀 XGBoost
-
-XGBoost is a powerful gradient boosting algorithm used for classification and is included to compare its performance with the other models.
-
-## 🛠️ Technologies Used
-
-- Python
-- Pandas
-- NumPy
-- Scikit-learn
-- XGBoost
-- Matplotlib
-- Jupyter Notebook
-
-## 📁 Project Structure
+## Project structure
 
 ```text
 customer-churn-prediction/
-│
-├── notebooks/
-│   └── customer_churn_prediction.ipynb
-│
-├── models/
-│   └── best_model.pkl
-│
-├── data/
-│   └── dataset
-│
-├── requirements.txt
-├── README.md
+├── app.py                       # Streamlit prediction interface
+├── train.py                     # Training, CV tuning, evaluation, and model export
+├── churn_prediction.ipynb       # Notebook walkthrough using the shared workflow
+├── Telco_customer_churn.xlsx    # Source training data
+├── best_model.joblib            # Exported fitted pipeline
+├── Project_Documentation.pdf    # Project documentation
+├── requirements.txt             # Python dependencies
 └── .gitignore
 ```
 
-## ▶️ How to Run
+## Author
 
-Clone the repository:
+Zeeshan Haider
 
-```bash
-git clone https://github.com/your-username/customer-churn-prediction.git
-```
+## License
 
-Move into the project folder:
-
-```bash
-cd customer-churn-prediction
-```
-
-Install the required libraries:
-
-```bash
-pip install -r requirements.txt
-```
-
-Open the Jupyter Notebook:
-
-```bash
-jupyter notebook
-```
-
-Then open the churn prediction notebook and run the cells.
-
-## 📌 Results
-
-The trained models are compared using Accuracy, Precision, Recall, and F1-Score.
-
-The model with the best overall performance is selected for the final prediction system.
-
-## 👨‍💻 Author
-
-**Zeeshan Haider**
-
-Computer Science | Machine Learning | Data Analysis
-
-## 📄 License
-
-This project is created for educational and portfolio purposes.
+Created for educational and portfolio purposes.
